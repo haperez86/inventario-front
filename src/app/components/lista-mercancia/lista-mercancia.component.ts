@@ -5,12 +5,14 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog'; 
 import { MercanciaService } from '../../services/mercancia.service';
 import { Mercancia } from '../../models/mercancia.model';
 
 // **Importa Usuario y el servicio**
 import { Usuario } from '../../models/usuario.model';
 import { UsuarioService } from '../../services/usuario.service';
+import { FormularioMercanciaComponent } from "../formulario-mercancia/formulario-mercancia.component";
 
 @Component({
   selector: 'app-lista-mercancia',
@@ -20,13 +22,16 @@ import { UsuarioService } from '../../services/usuario.service';
     FormsModule,
     SidebarModule,
     ButtonModule,
-    TableModule
-  ],
+    TableModule,
+    ConfirmDialogModule,
+    FormularioMercanciaComponent
+],
   templateUrl: './lista-mercancia.component.html',
   styleUrls: ['./lista-mercancia.component.scss'],
   providers: [ConfirmationService, MessageService]
 })
 export class ListaMercanciaComponent implements OnInit {
+
   mercancias: Mercancia[] = [];
   usuarios: Usuario[] = [];   // <-- array para dropdown usuarios
   usuarioSeleccionadoId: number | null = null; // <-- variable para id usuario seleccionado
@@ -95,8 +100,8 @@ export class ListaMercanciaComponent implements OnInit {
     });
   }
 
-  mostrarSidebar(mercancia?: Mercancia) {
-    this.selectedMercancia = mercancia ?? null;
+  mostrarSidebar(mercancia?: Mercancia): void {
+    this.selectedMercancia = mercancia ? { ...mercancia } : null;
     this.sidebarVisible = true;
   }
 
@@ -107,45 +112,41 @@ export class ListaMercanciaComponent implements OnInit {
 
   eliminarMercancia(mercancia: Mercancia) {
     if (!this.usuarioSeleccionadoId) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Atención',
-        detail: 'Debe seleccionar un usuario para eliminar la mercancía.'
-      });
+      alert('Debe seleccionar un usuario para eliminar la mercancía.');
       return;
     }
 
     // Solo permitir eliminar si el usuario es el que registró la mercancía
-    if (mercancia.usuarioRegistroId !== this.usuarioSeleccionadoId) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Solo el usuario que registró la mercancía puede eliminarla.'
-      });
+    if (+ (mercancia.usuarioRegistroId ?? -1) !== + (this.usuarioSeleccionadoId ?? -1)) {
+      alert('Solo el usuario que registró la mercancía puede eliminarla.');
       return;
     }
 
     this.confirmationService.confirm({
       message: `¿Está seguro que desea eliminar la mercancía "${mercancia.nombre}"?`,
       accept: () => {
+        // Para debug temporal
+        console.log(`Eliminando mercancia ID ${mercancia.id} por usuario ${this.usuarioSeleccionadoId}`);
+
         this.mercanciaService.eliminar(mercancia.id!, this.usuarioSeleccionadoId!).subscribe({
           next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Eliminado',
-              detail: 'Mercancía eliminada correctamente'
-            });
+            alert('Mercancía eliminada correctamente');
             this.cargarMercancias();
           },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudo eliminar la mercancía'
-            });
+          error: (error) => {
+            console.error('Error al eliminar:', error);
+            alert('No se pudo eliminar la mercancía');
           }
         });
       }
     });
   }
+
+  onSidebarVisibleChange(visible: boolean) {
+    this.sidebarVisible = visible;
+    if (!visible) {
+      this.selectedMercancia = null;
+    }
+  }
+  
 }

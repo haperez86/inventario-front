@@ -1,4 +1,19 @@
+<p-confirmDialog></p-confirmDialog>
 <div class="max-w-7xl mx-auto p-6 shadow-md rounded-lg">
+    <p-button 
+    label="Nuevo Registro" 
+    icon="pi pi-plus" 
+    (click)="mostrarSidebar()" 
+    class="mb-4"
+    />
+
+    <app-formulario-mercancia
+    [(sidebarVisible)]="sidebarVisible"
+    [mercanciaEditar]="selectedMercancia"
+    (sidebarVisibleChange)="sidebarVisible = $event">
+    </app-formulario-mercancia>
+
+
     <!-- Dropdown para seleccionar usuario -->
     <div class="usuario-select" style="margin-bottom: 1rem;">
     <label for="usuarioSelect">Seleccione Usuario:</label>
@@ -45,8 +60,8 @@
             pButton
             icon="pi pi-trash"
             class="p-button-rounded p-button-text p-button-danger"
-            (click)="eliminarMercancia(mercancia)"
             title="Eliminar"
+            (click)="eliminarMercancia(mercancia)"
             ></button>
         </td>
         </tr>
