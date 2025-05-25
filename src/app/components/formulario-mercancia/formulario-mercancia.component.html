@@ -1,0 +1,104 @@
+<div class="max-w-7xl mx-auto p-6 shadow-md rounded-lg">
+  
+  <!-- Botón y Sidebar -->
+  <div class="mb-8">
+    <!-- Botón para abrir el sidebar -->
+    <p-button 
+      label="Nuevo Registro" 
+      icon="pi pi-plus" 
+      (click)="mostrarSidebar()"
+      class="mb-4"
+    ></p-button>
+
+    <!-- Sidebar -->
+    <p-sidebar 
+      [(visible)]="sidebarVisible" 
+      position="right" 
+      [style]="{ width: '30rem' }" 
+      [baseZIndex]="10000"
+      [modal]="true"
+    >
+      <form 
+        [formGroup]="form" 
+        (ngSubmit)="guardar()" 
+        (click)="$event.stopPropagation()"
+        class="p-fluid px-4 py-6"
+      >
+        <h3 class="text-xl font-semibold mb-6 text-center">Registrar Nuevo</h3>
+
+        <div class="field mb-5">
+          <label for="nombre" class="block mb-2 font-medium text-gray-700">Nombre</label>
+          <input 
+            pInputText 
+            id="nombre" 
+            formControlName="nombre" 
+            class="w-full p-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+          <small 
+            *ngIf="form.get('nombre')?.invalid && submitted" 
+            class="p-error block mt-1 text-sm"
+          >
+            El nombre es requerido
+          </small>
+        </div>
+
+        <div class="field mb-5">
+          <label for="cantidad" class="block mb-2 font-medium text-gray-700">Cantidad</label>
+          <input 
+            type="number" 
+            pInputText 
+            id="cantidad" 
+            formControlName="cantidad" 
+            class="w-full p-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+          <small 
+            *ngIf="form.get('cantidad')?.invalid && submitted" 
+            class="p-error block mt-1 text-sm"
+          >
+            La cantidad debe ser mayor que 0
+          </small>
+        </div>
+
+        <!-- SOLO AQUÍ SE USA *ngIf -->
+        <div class="field mb-5" *ngIf="sidebarVisible">
+          <label for="fechaIngreso" class="block mb-2 font-medium text-gray-700">Fecha de Ingreso</label>
+          <p-calendar 
+            id="fechaIngreso" 
+            formControlName="fechaIngreso" 
+            dateFormat="yy-mm-dd" 
+            [showIcon]="true"
+            [appendTo]="'body'"
+            class="w-full"
+          ></p-calendar>
+        </div>
+
+        <div class="field mb-6">
+          <label for="usuario" class="block mb-2 font-medium text-gray-700">Usuario</label>
+          <p-dropdown 
+            id="usuario" 
+            formControlName="usuarioRegistroId" 
+            [options]="usuarios" 
+            optionLabel="nombre" 
+            placeholder="Seleccione un usuario"
+            class="w-full"
+          ></p-dropdown>
+        </div>
+
+        <div class="flex justify-center gap-4">
+          <p-button 
+            label="Cancelar" 
+            [outlined]="true" 
+            (click)="cancelar()"
+            class="w-32"
+          ></p-button>
+          <p-button 
+            label="Guardar" 
+            type="submit" 
+            [disabled]="form.invalid"
+            class="w-32"
+          ></p-button>
+        </div>
+      </form>
+    </p-sidebar>
+  </div>
+</div>

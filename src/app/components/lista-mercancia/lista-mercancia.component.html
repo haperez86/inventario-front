@@ -1,0 +1,55 @@
+<div class="max-w-7xl mx-auto p-6 shadow-md rounded-lg">
+    <!-- Dropdown para seleccionar usuario -->
+    <div class="usuario-select" style="margin-bottom: 1rem;">
+    <label for="usuarioSelect">Seleccione Usuario:</label>
+    <select id="usuarioSelect" [(ngModel)]="usuarioSeleccionadoId" required>
+        <option [ngValue]="null">-- Seleccione un usuario --</option>
+        <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+        {{ usuario.nombre }}
+        </option>
+    </select>
+    </div>
+
+    <!-- Tabla con la lista de mercancías -->
+    <p-table
+    [value]="mercancias"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="5"
+    responsiveLayout="scroll"
+    [scrollable]="true"
+    scrollHeight="400px"
+    >
+    <ng-template pTemplate="header">
+        <tr>
+        <th *ngFor="let col of colsMercancia">
+            {{ col.header }}
+        </th>
+        <th>Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-mercancia>
+        <tr>
+        <td *ngFor="let col of colsMercancia">
+            {{ mercancia[col.field] }}
+        </td>
+        <td>
+            <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-text"
+            (click)="mostrarSidebar(mercancia)"
+            title="Editar"
+            ></button>
+            <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-text p-button-danger"
+            (click)="eliminarMercancia(mercancia)"
+            title="Eliminar"
+            ></button>
+        </td>
+        </tr>
+    </ng-template>
+    </p-table>
+</div>
