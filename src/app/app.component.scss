@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  height: 100vh;
+}
+
+.menu-vertical {
+  width: 250px;
+  border-right: 1px solid #ccc;
+}
+
+.contenido-principal {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
