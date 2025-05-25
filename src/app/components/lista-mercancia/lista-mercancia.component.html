@@ -1,32 +1,55 @@
 <p-confirmDialog></p-confirmDialog>
+
 <div class="max-w-7xl mx-auto p-6 shadow-md rounded-lg">
-    <p-button 
+  <p-button 
     label="Nuevo Registro" 
     icon="pi pi-plus" 
     (click)="mostrarSidebar()" 
     class="mb-4"
-    />
+  />
 
-    <app-formulario-mercancia
+  <app-formulario-mercancia
     [(sidebarVisible)]="sidebarVisible"
     [mercanciaEditar]="selectedMercancia"
     (sidebarVisibleChange)="sidebarVisible = $event">
-    </app-formulario-mercancia>
+  </app-formulario-mercancia>
 
-
-    <!-- Dropdown para seleccionar usuario -->
-    <div class="usuario-select" style="margin-bottom: 1rem;">
+  <!-- Dropdown para seleccionar usuario -->
+  <div class="usuario-select mb-4">
     <label for="usuarioSelect">Seleccione Usuario:</label>
     <select id="usuarioSelect" [(ngModel)]="usuarioSeleccionadoId" required>
-        <option [ngValue]="null">-- Seleccione un usuario --</option>
-        <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+      <option [ngValue]="null">-- Seleccione un usuario --</option>
+      <option *ngFor="let usuario of usuarios" [value]="usuario.id">
         {{ usuario.nombre }}
-        </option>
+      </option>
     </select>
+  </div>
+
+  <!-- Filtros -->
+  <div class="mb-4 flex gap-4 items-end">
+    <div>
+      <label for="filtroNombre">Nombre:</label>
+      <input id="filtroNombre" type="text" [(ngModel)]="filtroNombre" placeholder="Nombre mercancia" />
     </div>
 
-    <!-- Tabla con la lista de mercancías -->
-    <p-table
+    <div>
+      <label for="filtroUsuario">Usuario:</label>
+      <select id="filtroUsuario" [(ngModel)]="filtroUsuarioId">
+        <option [ngValue]="null">-- Todos --</option>
+        <option *ngFor="let usuario of usuarios" [value]="usuario.id">{{ usuario.nombre }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="filtroFecha">Fecha Ingreso:</label>
+      <input id="filtroFecha" type="date" [(ngModel)]="filtroFechaIngreso" />
+    </div>
+
+    <button pButton label="Buscar" icon="pi pi-search" (click)="buscarMercanciasConFiltros()"></button>
+  </div>
+
+  <!-- Tabla con la lista de mercancías -->
+  <p-table
     [value]="mercancias"
     [loading]="loading"
     [paginator]="true"
@@ -34,37 +57,46 @@
     responsiveLayout="scroll"
     [scrollable]="true"
     scrollHeight="400px"
-    >
+  >
     <ng-template pTemplate="header">
-        <tr>
-        <th *ngFor="let col of colsMercancia">
-            {{ col.header }}
-        </th>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Fecha Ingreso</th>
+        <th>Usuario Registro</th>
+        <th>Usuario Modificación</th>
+        <th>Fecha Modificación</th>
         <th>Acciones</th>
-        </tr>
+      </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-mercancia>
-        <tr>
-        <td *ngFor="let col of colsMercancia">
-            {{ mercancia[col.field] }}
-        </td>
+      <tr>
+        <td>{{ mercancia.id }}</td>
+        <td>{{ mercancia.nombre }}</td>
+        <td>{{ mercancia.cantidad }}</td>
+        <td>{{ mercancia.fechaIngreso | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ obtenerNombreUsuario(mercancia.usuarioRegistroId) }}</td>
+        <td>{{ obtenerNombreUsuario(mercancia.usuarioModificacionId) }}</td>
+        <td>{{ mercancia.fechaModificacion | date: 'yyyy-MM-dd' }}</td>
         <td>
-            <button
+          <button
             pButton
             icon="pi pi-pencil"
             class="p-button-rounded p-button-text"
             (click)="mostrarSidebar(mercancia)"
             title="Editar"
-            ></button>
-            <button
+          ></button>
+          <button
             pButton
             icon="pi pi-trash"
             class="p-button-rounded p-button-text p-button-danger"
             title="Eliminar"
             (click)="eliminarMercancia(mercancia)"
-            ></button>
+          ></button>
         </td>
-        </tr>
+      </tr>
     </ng-template>
-    </p-table>
+  </p-table>
 </div>
