@@ -1,0 +1,118 @@
+<p-confirmDialog></p-confirmDialog>
+
+
+  <p-button
+    label="Nuevo Usuario"
+    icon="pi pi-user-plus"
+    class="mb-4"
+    (click)="mostrarSidebar()"
+  ></p-button>
+
+
+  <p-sidebar
+    [(visible)]="sidebarVisible"
+    position="right"
+    [modal]="true"
+    [baseZIndex]="10000"
+    showCloseIcon="true"
+    (onHide)="cerrarSidebar()"
+  >
+    <form
+      [formGroup]="form"
+      (ngSubmit)="guardar()"
+      (click)="$event.stopPropagation()"
+      class="p-fluid px-4 py-6"
+    >
+      <h3 class="text-xl font-semibold mb-6 text-center">
+        {{ usuarioEditar ? 'Editar Usuario' : 'Nuevo Usuario' }}
+      </h3>
+
+      <!-- Nombre -->
+      <div class="field mb-5">
+        <label for="nombre" class="block mb-2 font-medium text-gray-700">Nombre</label>
+        <input
+          id="nombre"
+          formControlName="nombre"
+          pInputText
+          class="w-full p-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+        <small
+          *ngIf="form.get('nombre')?.invalid && submitted"
+          class="p-error block mt-1 text-sm text-red-600"
+        >
+          El nombre es requerido
+        </small>
+      </div>
+
+      <!-- Edad -->
+      <div class="field mb-5">
+        <label for="edad" class="block mb-2 font-medium text-gray-700">Edad</label>
+        <input
+          id="edad"
+          type="number"
+          formControlName="edad"
+          pInputText
+          class="w-full p-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+        <small
+          *ngIf="form.get('edad')?.invalid && submitted"
+          class="p-error block mt-1 text-sm text-red-600"
+        >
+          Edad debe ser mayor a 0
+        </small>
+      </div>
+
+      <!-- Cargo -->
+      <div class="field mb-5">
+        <label for="cargo" class="block mb-2 font-medium text-gray-700">Cargo</label>
+        <p-dropdown
+          id="cargo"
+          formControlName="cargo"
+          [options]="cargos"
+          placeholder="Seleccione un cargo"
+          class="w-full"
+        ></p-dropdown>
+        <small
+          *ngIf="form.get('cargo')?.invalid && submitted"
+          class="p-error block mt-1 text-sm text-red-600"
+        >
+          El cargo es requerido
+        </small>
+      </div>
+
+      <!-- Fecha de Ingreso -->
+      <div class="field mb-5">
+        <label for="fechaIngreso" class="block mb-2 font-medium text-gray-700">Fecha de Ingreso</label>
+        <p-calendar
+          id="fechaIngreso"
+          formControlName="fechaIngreso"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          [appendTo]="'body'"
+          class="w-full"
+        ></p-calendar>
+        <small
+          *ngIf="form.get('fechaIngreso')?.invalid && submitted"
+          class="p-error block mt-1 text-sm text-red-600"
+        >
+          La fecha de ingreso es requerida
+        </small>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-center gap-4 mt-6">
+        <p-button
+          label="Cancelar"
+          [outlined]="true"
+          (click)="cancelar()"
+          class="w-32"
+        ></p-button>
+        <p-button
+          label="Guardar"
+          type="submit"
+          [disabled]="form.invalid"
+          class="w-32"
+        ></p-button>
+      </div>
+    </form>
+  </p-sidebar>

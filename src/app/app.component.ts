@@ -6,13 +6,16 @@ import { ButtonModule } from 'primeng/button';
 import { FormularioMercanciaComponent } from './components/formulario-mercancia/formulario-mercancia.component';
 import { ListaMercanciaComponent } from './components/lista-mercancia/lista-mercancia.component';
 import { PanelMenuModule } from 'primeng/panelmenu';
-import { MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { UsuarioSelectorComponent } from "./components/usuario-selector/usuario-selector.component";
+import { ListaUsuarioComponent } from "./components/usuario/lista-usuario.component";
+
 
 
 
 @Component({
   selector: 'app-root',
-
+  standalone: true,
   imports: [
     CommonModule,
     SidebarModule,
@@ -20,8 +23,14 @@ import { MenuItem } from 'primeng/api';
     RouterOutlet,
     PanelMenuModule,
     FormularioMercanciaComponent,
-    ListaMercanciaComponent
+    ListaMercanciaComponent,
+    UsuarioSelectorComponent,
+    ListaUsuarioComponent
 ],
+  providers: [
+    ConfirmationService,
+    MessageService
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

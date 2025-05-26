@@ -15,4 +15,8 @@ export class UsuarioService {
   listar(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.apiUrl);
   }
+
+  crear(usuario: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(this.apiUrl, usuario);
+  }
 }
