@@ -101,9 +101,11 @@ export class FormularioMercanciaComponent {
       }
     }
 
+    const usuarioId = this.form.get('usuarioRegistroId')?.value;
+
     if (this.mercanciaEditar?.id) {
-      // En edición enviamos usuarioModificacionId, no usuarioRegistroId
-      formValue.usuarioModificacionId = 2; // Aquí pon el id real del usuario que modifica
+      // Edición
+      formValue.usuarioModificacionId = usuarioId;
       delete formValue.usuarioRegistroId;
 
       this.mercanciaService.editar(this.mercanciaEditar.id, formValue).subscribe({
@@ -116,8 +118,8 @@ export class FormularioMercanciaComponent {
       });
 
     } else {
-      // En creación enviamos usuarioRegistroId
-      formValue.usuarioRegistroId = 2; // Aquí pon el id real del usuario que registra
+      // Creación
+      formValue.usuarioRegistroId = usuarioId;
 
       this.mercanciaService.crear(formValue).subscribe({
         next: () => {
@@ -129,6 +131,7 @@ export class FormularioMercanciaComponent {
       });
     }
   }
+
 
   
   mostrarSidebar() {
